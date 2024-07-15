@@ -9,6 +9,10 @@ call plug#begin()
     Plug 'w0rp/ale'
     Plug 'vim-scripts/ZoomWin'
     Plug 'majutsushi/tagbar'
+    Plug 'pangloss/vim-javascript'    " JavaScript support
+    Plug 'maxmellon/vim-jsx-pretty'   " JS and JSX syntax
+    Plug 'jparise/vim-graphql'        " GraphQL syntax
+    Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 set t_Co=256   " This is may or may not needed.
@@ -66,3 +70,34 @@ let g:ctrlp_custom_ignore= {
 
 "ctrl-w + o full screen
 nnoremap <silent> <C-w>w :ZoomWin<CR>
+
+"CoC
+" Kullanış 
+" CTRL + y => kabul edip kullanıyor
+" ctrl + n =>  yukarıdan aşşağıya doğru gidecek şekilde seçenekler arasında
+" geziniyor
+" ctrl + p => aşağıdan yukarı olacak şekilde seçeneklerde geziniyor
+let g:coc_global_extensions = [
+      \ 'coc-tsserver'
+      \ ]
+" Coc eslint ve prettier ayarları
+if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
+      let g:coc_global_extensions += ['coc-prettier']
+endif
+
+if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
+      let g:coc_global_extensions += ['coc-eslint']
+endif
+
+function! ShowDocIfNoDiagnostic(timer_id)
+      if (coc#float#has_float() == 0 && CocHasProvider('hover') == 1)
+          silent call CocActionAsync('doHover')
+      endif
+endfunction
+
+function! s:show_hover_doc()
+      call timer_start(500, 'ShowDocIfNoDiagnostic')
+endfunction
+
+autocmd CursorHoldI * :call <SID>show_hover_doc()
+autocmd CursorHold * :call <SID>show_hover_doc()
