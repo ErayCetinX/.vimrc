@@ -1,8 +1,8 @@
 call plug#begin()
-  Plug 'scrooloose/nerdtree'
-  Plug 'NLKNguyen/papercolor-theme'
-  Plug 'vim-airline/vim-airline'
-  Plug 'leafgarland/typescript-vim'
+	Plug 'scrooloose/nerdtree'
+	Plug 'NLKNguyen/papercolor-theme'
+	Plug 'vim-airline/vim-airline'
+	Plug 'leafgarland/typescript-vim'
   Plug 'scrooloose/syntastic'
   Plug 'tpope/vim-surround'
   Plug 'kien/ctrlp.vim'
@@ -19,16 +19,24 @@ call plug#begin()
   Plug 'elzr/vim-json'
   Plug 'ekalinin/dockerfile.vim'
   Plug 'townk/vim-autoclose'
+  Plug 'joshdick/onedark.vim'
+  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+  Plug 'ryanoasis/vim-devicons'
+  Plug 'fatih/vim-go' 
 call plug#end()
+
+set encoding=UTF-8
 
 set t_Co=256   " This is may or may not needed.
 
 set background=dark
-colorscheme PaperColor
 set number
 set laststatus=2
-
 map <F6> :TagbarToggle <CR>
+
+colorscheme onedark
+syntax on
+let g:airline_theme='onedark'
 
 "NerdConfig
 nnoremap <leader>n :NERDTreeFocus<CR>
@@ -129,3 +137,50 @@ nnoremap <leader>6 :6tabnext<CR>
 nnoremap <leader>7 :7tabnext<CR>
 nnoremap <leader>8 :8tabnext<CR>
 nnoremap <leader>9 :9tabnext<CR>
+
+"" nerdteree syntax
+let g:WebDevIconsDisableDefaultFolderSymbolColorFromNERDTreeDir = 1
+let g:WebDevIconsDisableDefaultFileSymbolColorFromNERDTreeFile = 1
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+let g:NERDTreeHighlightFolders = 1 " enables folder icon highlighting using exact match
+let g:NERDTreeHighlightFoldersFullName = 1 " highlights the folder name  "
+
+"" vim de arama yaptıktan sonra highlights kaldırma
+set nohlsearch
+
+set guifont=BitstreamVeraSansMono_NF:h13
+
+" golang settings
+filetype plugin indent on
+setlocal omnifunc=go#complete#Complete
+
+set autowrite
+
+"Go syntax highlighting
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_operators = 1
+
+" Auto formatting and importing
+let g:go_fmt_autosave = 1
+let g:go_fmt_command = "goimports"
+
+" Status line types/signatures
+let g:go_auto_type_info = 1
+
+" Run :GoBuild or :GoTestCompile based on the go file
+function! s:build_go_files()
+ let l:file = expand('%')
+   if l:file =~# '^\f\+_test\.go$'
+     call go#test#Test(0, 1)
+   elseif l:file =~# '^\f\+\.go$'
+     call go#cmd#Build(0)
+   endif
+endfunction
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+autocmd FileType go nmap <leader>r  <Plug>(go-run)
+autocmd FileType go nmap <leader>t  <Plug>(go-test)
