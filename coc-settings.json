@@ -9,5 +9,20 @@
       "typescriptreact"
     ],
     "tsserver.formatOnType": true,
-    "coc.preferences.formatOnType": true
+    "coc.preferences.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "languageserver": {
+      "golang": {
+        "command": "gopls",
+        "rootPatterns": ["go.mod", "main.go", ".vim/", ".git/", ".hg/"],
+        "filetypes": ["go"],
+        "initializationOptions": {
+          "usePlaceholders": true
+        }
+      }
+    },
+    "snippets.ultisnips.pythonPrompt": false
+
 }
